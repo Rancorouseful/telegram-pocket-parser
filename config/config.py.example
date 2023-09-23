@@ -1,0 +1,9 @@
+
+# Токен BotFather
+TOKEN = 'BOT_TOKEN'
+
+# Данные PostgreSQL
+host = 'LOCALHOST_OR_OTHER'
+user = 'USERNAME'
+password = 'PASSWORD'
+db_name = 'DATABASE_NAME'
