@@ -1,9 +1,0 @@
-msgid ""
-msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-
-msgid "Бот уже запущен"
-msgstr "The bot is already running"
-
-msgid "Язык выбран"
-msgstr "Language selected"

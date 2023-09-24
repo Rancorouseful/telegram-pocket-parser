@@ -44,7 +44,7 @@ try:
 
             cursor.execute(f'''SELECT chat_id FROM users WHERE CAST(chat_id AS BIGINT) = {chat_id};''')
             
-            return cursor.fetchone is not None
+            return cursor.fetchone() is not None
     
     def get_language(chat_id):
         connect()
@@ -52,6 +52,12 @@ try:
             cursor.execute(f'''SELECT language FROM users WHERE CAST(chat_id AS BIGINT) = {chat_id};''')
             print(f'[INFO] Getting *{chat_id}* language')
             return cursor.fetchone()[0]
+        
+    def set_language(chat_id, language):
+        connect()
+        with connection.cursor() as cursor:
+            cursor.execute(f'''UPDATE users SET language = '{language}' WHERE CAST(chat_id AS BIGINT) = {chat_id};''')
+            print(f'[INFO] Setting *{chat_id}* language ({language})')
 
 
 except Exception as _ex:

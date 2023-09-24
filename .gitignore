@@ -1,2 +1,5 @@
+**/__pycache__/
 /config/config.py
 /env/
+
+utils/__pycache__/db_connect.cpython-310.pyc
