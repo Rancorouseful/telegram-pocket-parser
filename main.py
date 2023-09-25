@@ -6,6 +6,7 @@ from language import ru, en
 
 from config import config
 from utils import keyboards, db_connect
+from utils.get_page import get
 
 #--- Подключение бота
 API_TOKEN = config.TOKEN
@@ -45,7 +46,19 @@ async def return_to_styles(c: types.CallbackQuery):
         # Добавить пользователя
         db_connect.add_user(chat_id, language)
 
-    await bot.send_message(chat_id, await localize('Язык выбран', language))
+    await bot.send_message(chat_id, await localize('Язык выбран', language), reply_markup=keyboards.content_keyboard)
+
+@dp.callback_query_handler(lambda c: c.data in keyboards.GET_CONTENT)
+async def return_to_styles(c: types.CallbackQuery):
+
+    chat_id = c.message.chat.id
+    page = get.page('https://beatmaker.site/')
+    tag = 'a'
+
+    response = get.tag(page, tag)
+
+    await bot.send_message(chat_id, f'Вот все <a> теги на сайте:\n\n{response}')
+
 
 
 #--- Непрерывная работа
