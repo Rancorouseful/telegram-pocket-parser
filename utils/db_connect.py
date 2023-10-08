@@ -26,6 +26,14 @@ try:
                             processing INTEGER DEFAULT 0
                             );''')
             print('[INFO] Table "users" works succesfuly') 
+
+            cursor.execute('''CREATE TABLE IF NOT EXISTS preferences(
+                            id SERIAL PRIMARY KEY,
+                            chat_id	BIGINT UNIQUE NOT NULL,
+                            chosen_url TEXT DEFAULT '',
+                            chosen_mode TEXT DEFAULT ''
+                            );''')
+            print('[INFO] Table "preferences" works succesfuly') 
             
         return True
     
@@ -35,6 +43,9 @@ try:
         with connection.cursor() as cursor:
             cursor.execute(f'''INSERT INTO users (chat_id, language)
             VALUES ('{chat_id}', '{language}') ON CONFLICT DO NOTHING;''')
+
+            cursor.execute(f'''INSERT INTO preferences (chat_id)
+            VALUES ('{chat_id}') ON CONFLICT DO NOTHING;''')
             
             print(f'[INFO] Values for {chat_id} ({language}) succesfuly added')
     
@@ -58,7 +69,30 @@ try:
         with connection.cursor() as cursor:
             cursor.execute(f'''UPDATE users SET language = '{language}' WHERE CAST(chat_id AS BIGINT) = {chat_id};''')
             print(f'[INFO] Setting *{chat_id}* language ({language})')
+    
+    def set_url(chat_id, url):
+        connect()
+        with connection.cursor() as cursor:
+            sql = "UPDATE users SET chosen_url = %s WHERE CAST(chat_id AS BIGINT) = %s;"
+            cursor.execute(sql, (url, chat_id))
+            connection.commit()
+            print(f'[INFO] Setting *{chat_id}* chosen_url ({url})')
 
+    def set_chosen_mode(chat_id, mode):
+        connect()
+        with connection.cursor() as cursor:
+            sql = "UPDATE preferences SET chosen_mode = %s WHERE CAST(chat_id AS BIGINT) = %s;"
+            cursor.execute(sql, (mode, chat_id))
+            connection.commit()
+            print(f'[INFO] Setting *{chat_id}* chosen_mode ({mode})')
+    
+    def get_chosen_mode(chat_id):
+        connect()
+        with connection.cursor() as cursor:
+            cursor.execute(f'''SELECT chosen_mode FROM preferences WHERE CAST(chat_id AS BIGINT) = {chat_id};''')
+            print(f'[INFO] Getting *{chat_id}* chosen_mode')
+            return cursor.fetchone()[0]  
+        
 
 except Exception as _ex:
     print('[INFO] Error while working with PostgreSQL', _ex)
